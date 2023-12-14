@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arduino Control Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -14,36 +15,42 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         #container {
-            background-color: white;
+            background-color: #ffffff;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         h1 {
             color: #333;
+            margin-bottom: 20px;
         }
 
         form {
-            margin-top: 20px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
         }
 
         label {
             font-weight: bold;
-            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 1.2em;
         }
 
         input {
             padding: 10px;
-            flex: 1;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+            font-size: 1em;
         }
 
         button {
@@ -54,6 +61,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            font-size: 1em;
         }
 
         button:hover {
@@ -63,12 +71,43 @@
         p {
             margin-top: 20px;
             font-weight: bold;
+            font-size: 1.2em;
+            color: #3498db; /* Blue color for the response */
+            border: 2px solid #3498db;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #ecf0f1; /* Light background color */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        li {
+            cursor: pointer;
+            padding: 10px;
+            background: linear-gradient(45deg, #3498db, #2c3e50);
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+            margin: 5px;
+        }
+
+        li:hover {
+            background: linear-gradient(45deg, #2980b9, #34495e);
         }
 
         img {
             max-width: 100%;
             height: auto;
             margin-top: 20px;
+            border-radius: 10px;
         }
     </style>
 </head>
@@ -76,15 +115,31 @@
     <div id="container">
         <h1>Arduino Control Panel</h1>
         <form id="commandForm">
-            <label for="command">Enter command:</label>
-            <input type="text" id="command" name="command" required>
-            <button type="button" onclick="sendCommand()">Send Command</button>
+            <div class="input-field">
+                <label for="command">Enter command:</label>
+                <input type="text" id="command" name="command" required>
+            </div>
+            <button class="btn waves-effect waves-light" type="button" onclick="sendCommand()">Send Command</button>
         </form>
         <p id="response"></p>
-        <img src="https://github.com/InFluX-M/arduino_project/blob/main/mega/static/arduino_image.jpg" alt="Arduino Board">
+        <ul id="commandList" onclick="selectCommand(event)">
+            <li>AT</li>
+            <li>LED=ON</li>
+            <li>LED=OFF</li>
+            <li>BLINKING=ON</li>
+            <li>BLINKING=OFF</li>
+            <li>PERIOD=XXXX</li>
+            <li>STATUS?</li>
+        </ul>
+        <img src="https://cdn-reichelt.de/bilder/web/xxl_ws/A300/ARDUINO_MEGA_01_NEU.png" alt="Arduino Board">
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
+        // Initialize Materialize components
+        M.AutoInit();
+
         function sendCommand() {
             var commandInput = document.getElementById("command");
             var responseElement = document.getElementById("response");
@@ -113,6 +168,16 @@
 
             // Clear the input field
             commandInput.value = "";
+        }
+
+        function selectCommand(event) {
+            var commandInput = document.getElementById("command");
+
+            // Check if the click happened on an li element
+            if (event.target.tagName.toLowerCase() === 'li') {
+                var selectedCommand = event.target.innerText;
+                commandInput.value = selectedCommand;
+            }
         }
     </script>
 </body>

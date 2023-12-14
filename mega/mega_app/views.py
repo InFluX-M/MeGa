@@ -40,7 +40,7 @@ def send_command(request):
             else:
                 T = int(command[7:])
     
-        time.sleep(1.5)
+        time.sleep(0.5)
 
         res = ser.readline().decode().strip()
         response_from_arduino = f"{res}"
