@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Control Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        input {
+            padding: 10px;
+            flex: 1;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Arduino Control Panel</h1>
+        <form id="commandForm">
+            <label for="command">Enter command:</label>
+            <input type="text" id="command" name="command" required>
+            <button type="button" onclick="sendCommand()">Send Command</button>
+        </form>
+        <p id="response"></p>
+        <img src="arduino_image.jpg" alt="Arduino Board">
+    </div>
+
+    <script>
+        function sendCommand() {
+            var commandInput = document.getElementById("command");
+            var responseElement = document.getElementById("response");
+
+            var command = commandInput.value.trim();
+            if (command !== "") {
+                // Send the command to the local server
+                fetch('/send_command', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'command=' + encodeURIComponent(command),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the response from the server
+                    responseElement.innerHTML = "Response: " + data.response;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                responseElement.innerHTML = "Please enter a command.";
+            }
+
+            // Clear the input field
+            commandInput.value = "";
+        }
+    </script>
+</body>
+</html>
